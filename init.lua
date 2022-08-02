@@ -1,41 +1,47 @@
-local butter_armor = {}
-butter_armor.t = {}
-local temp_color = "#FFFF00"
-local defalut_cheese_power = .5 -- About as tough as chocolate.
-local defalut_butter_power = defalut_cheese_power * .75 -- 25% less powerfull than chocolate
-if minetest.get_modpath("farming") ~= nil and farming.mod == "redo" then
+local butter_armor = {
+	t = {},
+	m = {
+		farming_redo = minetest.get_modpath("farming") ~= nil and farming.mod == "redo",
+		mobs_animal = minetest.get_modpath("mobs_animal") ~= nil,
+	}
+}
+local default_cheese_power = .5 -- About as tough as chocolate.
+local default_butter_power = default_cheese_power * .75 -- 25% less powerfull than chocolate
+if butter_armor.m.farming_redo then
 	butter_armor.t.cheese_vegan = {
 		alias = "farming:cheese_vegan",
 		description = "Vegan Cheese",
 		color = "#e1bc59",  -- Sampled from the farming texture
 		feeds = 1.5,
-		power = defalut_cheese_power,
+		power = default_cheese_power,
 	}
 end
-if minetest.get_modpath("mobs") ~= nil then
+-- "Default cheese"
+if butter_armor.m.mobs_animal then
 	butter_armor.t.cheese = {
 		alias = "mobs:cheese",
 		alias_block = "mobs:cheeseblock",
 		description = "Cheese",
 		color = "#e1ce59",  -- Sampled from the mobs texture
 		feeds = 3.5,
-		power = defalut_cheese_power,
+		power = default_cheese_power,
 	}
 	-- TODO there are two cheeses in my test world right now
+end
+-- "Default butter"
+if butter_armor.m.mobs_animal then
 	butter_armor.t.butter = {
 		alias = "mobs:butter",
 		description = "Butter",
 		color = "#fdfe00",  -- Sampled from the mobs texture
 		feeds = 0.5,
-		power = defalut_butter_power,
+		power = default_butter_power,
 	}
---elseif minetest.get_modpath("" then
 end
 for name, value in pairs(butter_armor.t) do
-	minetest.log("error", name)
 	local true_name = "butter_armor:" .. name -- Like in Eragon, one must reference things by their true name
 	local node = minetest.registered_nodes[value.alias] or value
-	instant_ores.register_metal({ -- cuz eating your armor is so metal
+	instant_ores.register_metal({
 		name = true_name,
 		description = node.description,
 		artificial = true,  -- Provided by dependancies. (Last I checked, dairy products don't come from the earth)
